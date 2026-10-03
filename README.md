@@ -1,5 +1,7 @@
 # RePart
 
+[Project Page](https://engineeringai-lab.github.io/RePart/)
+
 ## Setup
 
 Use Python 3.10 or newer:
