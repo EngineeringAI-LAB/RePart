@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="description" content="RePart organizes geometric primitives into semantic 3D parts through reinforcement reasoning and maps the results back to the original mesh.">
+    <meta property="og:title" content="RePart | Reinforcement Reasoning for 3D Segmentation">
+    <meta property="og:description" content="From compact primitives to semantic parts and boundary-aware surface labels.">
+    <meta property="og:image" content="assets/motivation.png">
+    <title>RePart | Reinforcement Reasoning for 3D Segmentation</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="brand" href="#top" aria-label="RePart home">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+          RePart
+        </a>
+        <nav aria-label="Page navigation">
+          <a href="#abstract">Abstract</a>
+          <a href="#method">Method</a>
+          <a href="#results">Results</a>
+          <a href="#visuals">Visuals</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="intro shell" id="top" aria-labelledby="page-title">
+        <div class="intro-label"><span class="accent-line"></span> 3D part segmentation</div>
+        <h1 id="page-title">RePart</h1>
+        <p class="paper-title">Organize Primitives into Semantic Parts:<br> Reinforcement Reasoning for 3D Segmentation</p>
+        <div class="authors" aria-label="Authors">
+          <span>Xiaoming Gong<sup>1,*</sup></span>
+          <span>Ruoyu Wu<sup>2,*</sup></span>
+          <span>Zhenhong Sun<sup>3</sup></span>
+          <span>Chunlin Chen<sup>1</sup></span>
+          <span>Daoyi Dong<sup>4</sup></span>
+          <span>Huadong Mo<sup>2</sup></span>
+          <span>Zhi Wang<sup>1</sup></span>
+          <span>Hongdong Li<sup>3</sup></span>
+        </div>
+        <div class="affiliations">
+          <span><sup>1</sup> Nanjing University, China</span>
+          <span><sup>2</sup> University of New South Wales, Canberra, Australia</span>
+          <span><sup>3</sup> Australian National University, Australia</span>
+          <span><sup>4</sup> University of Technology Sydney, Australia</span>
+        </div>
+        <p class="author-note"><sup>*</sup> Equal contribution</p>
+        <div class="intro-actions">
+          <a class="action primary" href="https://github.com/EngineeringAI-LAB/RePart" target="_blank" rel="noopener noreferrer">Code <span aria-hidden="true">&nearr;</span></a>
+        </div>
+      </section>
+
+      <section class="motivation-section" aria-label="Motivation">
+        <div class="shell">
+        <figure class="figure motivation-figure">
+          <button class="figure-expand" type="button" data-zoom="assets/motivation.png" data-alt="Primitive segmentation, the need for semantic organization, and reinforcement-learning grouping." aria-label="Expand motivation figure" title="Expand figure">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="m21 3-7 7"/><path d="M9 21H3v-6"/><path d="m3 21 7-7"/></svg>
+          </button>
+          <img src="assets/motivation.png" alt="A three-panel figure: a chair decomposed into primitives, examples of primitive-to-part ambiguity, and sequential grouping as a Markov decision process." width="1800" height="607">
+          <figcaption>Primitive decomposition supplies compact structure. RePart organizes those primitives into semantic parts through sequential merge-and-stop decisions.</figcaption>
+        </figure>
+        </div>
+      </section>
+
+      <section class="abstract-band" id="abstract" aria-labelledby="abstract-heading">
+        <div class="shell reading-width">
+          <p class="section-kicker">The problem</p>
+          <h2 id="abstract-heading">Abstract</h2>
+          <p>Primitive-based 3D segmentation offers a compact and explicit alternative to dense surface prediction, but geometric decomposition alone does not determine which primitives belong to the same semantic part. One part may span several primitives, while nearby primitives with similar geometry may belong to different parts.</p>
+          <p><strong>RePart</strong> treats primitive-to-part organization as a finite-horizon decision process. A merge-and-stop policy learns to group fine-grained superquadrics according to their effect on the final partition, then transfers the inferred identities back to the original mesh with boundary-aware surface labeling. Training uses part annotations, while the deployed policy relies on geometry alone.</p>
+        </div>
+      </section>
+
+      <section class="method-section" id="method" aria-labelledby="method-heading">
+        <div class="shell">
+          <div class="section-head">
+            <p class="section-kicker">How it works</p>
+            <h2 id="method-heading">From a primitive workspace to dense part labels</h2>
+            <p>RePart separates compact structural reasoning from boundary localization on the original surface.</p>
+          </div>
+          <figure class="figure overview-figure">
+            <button class="figure-expand" type="button" data-zoom="assets/overview.png" data-alt="RePart pipeline with a composable primitive workspace, reinforcement-learning part reasoning, and boundary-aware surface labeling." aria-label="Expand method overview" title="Expand figure">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="m21 3-7 7"/><path d="M9 21H3v-6"/><path d="m3 21 7-7"/></svg>
+            </button>
+            <img src="assets/overview.png" alt="Overview of RePart: SQ workspace construction, progressive merge-and-stop reasoning, and surface labeling of the original mesh." width="1800" height="714" loading="lazy">
+            <figcaption>Overview of the three stages of RePart. The policy uses geometry-only observations at inference; ground-truth part labels supervise training.</figcaption>
+          </figure>
+          <div class="method-steps" aria-label="RePart stages">
+            <article>
+              <span class="step-index">01</span>
+              <h3>Composable Primitive Workspace</h3>
+              <p>Over-segmented superquadrics provide stable, geometric tokens without fixing the final semantic partition.</p>
+            </article>
+            <article>
+              <span class="step-index">02</span>
+              <h3>Reinforcement-Learning Part Reasoning</h3>
+              <p>A policy repeatedly merges groups or stops. PPO evaluates decisions through their downstream effect on the partition.</p>
+            </article>
+            <article>
+              <span class="step-index">03</span>
+              <h3>Boundary-Aware Surface Labeling</h3>
+              <p>Terminal group identities are projected onto the original mesh using surface proximity and volumetric evidence.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="results-section" id="results" aria-labelledby="results-heading">
+        <div class="shell">
+          <div class="section-head">
+            <p class="section-kicker">Quantitative results</p>
+            <h2 id="results-heading">Partition quality across datasets</h2>
+            <p>Strong in-domain performance on PartNet, with metric-dependent transfer to 3DCoMPaT++ without target-dataset fine-tuning.</p>
+          </div>
+
+          <div class="metric-strip" aria-label="Selected RePart results">
+            <div><strong>0.5460</strong><span>PartNet mIoU</span><small>Highest in the comparison</small></div>
+            <div><strong>0.8471</strong><span>PartNet VoI</span><small>Lower is better</small></div>
+            <div><strong>0.7575</strong><span>3DCoMPaT++ RI</span><small>Highest in the comparison</small></div>
+            <div><strong>0.5790</strong><span>3DCoMPaT++ SC</span><small>Highest in the comparison</small></div>
+          </div>
+
+          <div class="table-header">
+            <div>
+              <h3>Average partition quality</h3>
+              <p>Each dataset is evaluated with four complementary partition metrics.</p>
+            </div>
+            <div class="dataset-tabs" role="tablist" aria-label="Choose dataset">
+              <button id="tab-partnet" role="tab" aria-selected="true" aria-controls="panel-partnet" tabindex="0" data-tab="partnet" type="button">PartNet</button>
+              <button id="tab-compat" role="tab" aria-selected="false" aria-controls="panel-compat" tabindex="-1" data-tab="compat" type="button">3DCoMPaT++</button>
+            </div>
+          </div>
+
+          <div id="panel-partnet" class="table-panel" role="tabpanel" aria-labelledby="tab-partnet" data-panel="partnet">
+            <div class="table-scroll" tabindex="0" role="region" aria-label="PartNet partition metrics">
+              <table>
+                <thead><tr><th scope="col">Method</th><th scope="col">mIoU &uarr;</th><th scope="col">RI &uarr;</th><th scope="col">VoI &darr;</th><th scope="col">SC &uarr;</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">MPS</th><td>0.3169</td><td>0.5266</td><td>1.0213</td><td>0.5267</td></tr>
+                  <tr><th scope="row">PartField</th><td>0.5249</td><td>0.7877</td><td>1.0810</td><td>0.6502</td></tr>
+                  <tr><th scope="row">P3-SAM</th><td>0.4858</td><td>0.6966</td><td>1.2238</td><td>0.5833</td></tr>
+                  <tr><th scope="row">SAMPart3D</th><td>0.4229</td><td>0.6999</td><td>1.1996</td><td>0.5862</td></tr>
+                  <tr><th scope="row">PriMAny</th><td>0.2440</td><td>0.5231</td><td>2.6506</td><td>0.2476</td></tr>
+                  <tr class="ours"><th scope="row">RePart</th><td><strong>0.5460</strong></td><td><strong>0.7965</strong></td><td><strong>0.8471</strong></td><td><strong>0.6891</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="panel-compat" class="table-panel" role="tabpanel" aria-labelledby="tab-compat" data-panel="compat" hidden>
+            <div class="table-scroll" tabindex="0" role="region" aria-label="3DCoMPaT++ partition metrics">
+              <table>
+                <thead><tr><th scope="col">Method</th><th scope="col">mIoU &uarr;</th><th scope="col">RI &uarr;</th><th scope="col">VoI &darr;</th><th scope="col">SC &uarr;</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">MPS</th><td>0.2125</td><td>0.4371</td><td><strong>1.2043</strong></td><td>0.4371</td></tr>
+                  <tr><th scope="row">PartField</th><td>0.3483</td><td>0.6914</td><td>1.2998</td><td>0.5302</td></tr>
+                  <tr><th scope="row">P3-SAM</th><td><strong>0.5003</strong></td><td>0.7455</td><td>1.3783</td><td>0.5606</td></tr>
+                  <tr><th scope="row">SAMPart3D</th><td>0.4144</td><td>0.7089</td><td>1.5508</td><td>0.5304</td></tr>
+                  <tr><th scope="row">PriMAny</th><td>0.2477</td><td>0.5932</td><td>2.4509</td><td>0.2796</td></tr>
+                  <tr class="ours"><th scope="row">RePart</th><td>0.4476</td><td><strong>0.7575</strong></td><td>1.2838</td><td><strong>0.5790</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <p class="metric-note"><strong>Metrics:</strong> mIoU measures part overlap, RI pairwise partition agreement, VoI partition information difference, and SC region covering. Results match the manuscript's average partition-quality table.</p>
+          <p class="transfer-note">On 3DCoMPaT++, RePart's mIoU is below P3-SAM (0.4476 vs. 0.5003), while its RI and SC are higher than the compared methods. Transfer is therefore metric-dependent.</p>
+
+          <div class="category-block">
+            <div>
+              <p class="section-kicker">Category view</p>
+              <h3>RePart mIoU by category group</h3>
+              <p>Jointly fine-tuned policy; no 3DCoMPaT++ fine-tuning.</p>
+            </div>
+            <div class="table-scroll" tabindex="0" role="region" aria-label="RePart category-level mIoU">
+              <table class="category-table">
+                <thead><tr><th scope="col">Dataset</th><th scope="col">Furniture</th><th scope="col">Containers</th><th scope="col">Daily-use</th><th scope="col">Average</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">PartNet</th><td>0.4247</td><td>0.6456</td><td>0.5432</td><td><strong>0.5460</strong></td></tr>
+                  <tr><th scope="row">3DCoMPaT++</th><td>0.3703</td><td>0.5149</td><td>0.4607</td><td><strong>0.4476</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="visuals-section" id="visuals" aria-labelledby="visuals-heading">
+        <div class="shell">
+          <div class="section-head">
+            <p class="section-kicker">Qualitative results</p>
+            <h2 id="visuals-heading">From fragmented tokens to coherent parts</h2>
+            <p>Examples from PartNet and 3DCoMPaT++ compare RePart with ground truth and five baseline methods.</p>
+          </div>
+          <figure class="figure qualitative-figure">
+            <button class="figure-expand" type="button" data-zoom="assets/qualitative.png" data-alt="Qualitative comparison across ten PartNet and 3DCoMPaT++ shapes and seven methods." aria-label="Expand qualitative comparison" title="Expand figure">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="m21 3-7 7"/><path d="M9 21H3v-6"/><path d="m3 21 7-7"/></svg>
+            </button>
+            <img src="assets/qualitative.png" alt="Ten rows of segmented 3D objects. Columns show ground truth, MPS, PriMAny, PartField, P3-SAM, SAMPart3D, and RePart." width="1800" height="1840" loading="lazy">
+            <figcaption>Five PartNet examples appear above five 3DCoMPaT++ examples. Click the expand button for a closer view.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>RePart &middot; Organize primitives into semantic parts</span>
+        <a href="https://github.com/EngineeringAI-LAB" target="_blank" rel="noopener noreferrer">EngineeringAI-LAB</a>
+      </div>
+    </footer>
+
+    <dialog class="image-dialog" id="image-dialog" aria-label="Expanded figure">
+      <div class="dialog-toolbar"><button id="close-dialog" type="button">Close</button></div>
+      <img id="dialog-image" alt="">
+    </dialog>
+    <script src="script.js"></script>
+  </body>
+</html>
