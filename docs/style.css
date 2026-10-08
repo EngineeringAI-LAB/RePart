@@ -107,6 +107,8 @@ tbody tr.ours th { font-weight: 800; }
 .category-table { min-width: 560px; }
 .visuals-section .section-head { max-width: 790px; }
 .qualitative-figure { max-width: 1000px; margin-inline: auto; }
+.citation-section { padding: 74px 0 82px; border-top: 1px solid var(--line); background: var(--wash); }
+.citation-code { overflow-x: auto; margin: 0; padding: 20px 22px; border: 1px solid var(--line); border-radius: 5px; background: #fff; color: var(--ink); font-size: 13px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
 
 .dialog-toolbar button { min-height: 37px; padding: 0 14px; border: 1px solid #90a9a5; border-radius: 5px; color: #fff; background: transparent; font-size: 13px; font-weight: 750; cursor: pointer; }
 .dialog-toolbar button:hover { background: #355054; }
@@ -144,7 +146,7 @@ tbody tr.ours th { font-weight: 800; }
   .authors { gap: 2px 12px; font-size: 13px; }
   .affiliations { font-size: 11px; }
   .motivation-figure { margin-bottom: 56px; }
-  .abstract-band, .method-section, .results-section, .visuals-section { padding-block: 60px; }
+  .abstract-band, .method-section, .results-section, .visuals-section, .citation-section { padding-block: 60px; }
   h2 { font-size: 29px; }
   .abstract-band p:not(.section-kicker) { font-size: 15px; }
   .method-steps { grid-template-columns: 1fr; }
