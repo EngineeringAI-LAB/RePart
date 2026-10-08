@@ -1,6 +1,6 @@
 # RePart
 
-[Project Page](https://engineeringai-lab.github.io/RePart/)
+[arXiv](https://arxiv.org/pdf/2610.04602) | [Project Page](https://engineeringai-lab.github.io/RePart/)
 
 ## Setup
 
