@@ -36,3 +36,15 @@ document.getElementById('close-dialog').addEventListener('click', () => dialog.c
 dialog.addEventListener('click', (event) => {
   if (event.target === dialog) dialog.close();
 });
+
+const citationCode = document.getElementById('citation-code');
+const copyCitation = document.getElementById('copy-citation');
+copyCitation.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(citationCode.textContent.trim());
+    copyCitation.textContent = 'Copied';
+  } catch {
+    copyCitation.textContent = 'Copy failed';
+  }
+  setTimeout(() => { copyCitation.textContent = 'Copy BibTeX'; }, 2000);
+});

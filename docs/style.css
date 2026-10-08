@@ -108,7 +108,10 @@ tbody tr.ours th { font-weight: 800; }
 .visuals-section .section-head { max-width: 790px; }
 .qualitative-figure { max-width: 1000px; margin-inline: auto; }
 .citation-section { padding: 74px 0 82px; border-top: 1px solid var(--line); background: var(--wash); }
-.citation-code { overflow-x: auto; margin: 0; padding: 20px 22px; border: 1px solid var(--line); border-radius: 5px; background: #fff; color: var(--ink); font-size: 13px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
+.citation-box { position: relative; border: 1px solid #335850; border-radius: 5px; background: #071512; }
+.citation-code { overflow-x: auto; margin: 0; padding: 66px 20px 20px; color: #f1f7f3; font-size: 13px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
+.citation-copy { position: absolute; top: 12px; right: 12px; min-height: 36px; padding: 0 13px; border: 1px solid #426c62; border-radius: 5px; color: #fff; background: #163a32; font-size: 13px; font-weight: 750; cursor: pointer; }
+.citation-copy:hover, .citation-copy:focus-visible { background: #235247; }
 
 .dialog-toolbar button { min-height: 37px; padding: 0 14px; border: 1px solid #90a9a5; border-radius: 5px; color: #fff; background: transparent; font-size: 13px; font-weight: 750; cursor: pointer; }
 .dialog-toolbar button:hover { background: #355054; }
